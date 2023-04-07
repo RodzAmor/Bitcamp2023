@@ -1,3 +1,3 @@
 import openai
 
-audio_file = open("")
+audio_file = open()
