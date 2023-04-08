@@ -1,12 +1,12 @@
 # 2023 Bitcamp[^1]
 
 ### Basic Premise:
-The goal of the program is to quickly extract information from a Panopto[^2] lecture recording. Whether it's notes, summaries of varying lengths and detail, or even practice problems with an answer key, students can use this program to save large amounts of time in parsing recordings of lectures. All the user has to do is copy the URL link and input it into the program, then they'll be presented with several options on the kind of information they want to get. 
+The goal of the program is to quickly extract information from any educational video or Panopto[^2] lecture recording. Whether it's notes, summaries of varying lengths and detail, or even practice problems with an answer key, students can use this program to save large amounts of time in parsing recordings of lectures. The user has the option to paste the transcript, upload an mp3 or mp4 file, or paste in a Youtube link, then they'll be presented with several options on the kind of information they want to get. 
 
 ---
 
 ### Under the Hood:
-After a user inputs a URL link, the program will scrape the website to download the recording, extract the audio file from the recording, produce a transcript from converting the audio to text, then using the GPT[^3] API to produce the formatted outputs for the user's convinenve. 
+After a user inputs a URL link, the program will scrape the website to download the recording, extract the audio file from the recording, produce a transcript from converting the audio to text, then using the GPT[^3] API to produce the formatted outputs for the user's convenience. 
 
 ---
 
