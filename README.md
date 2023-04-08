@@ -12,6 +12,7 @@ After a user inputs a URL link, the program will scrape the website to download 
 
 ### Setup:
 `git clone https://github.com/RodzAmor/Bitcamp2023/LectureGPT.git` to copy down the project
+
 `cd LectureGPT` to navigate into the project
 
 
