@@ -14,6 +14,11 @@ openai.api_key = os.getenv("OPEN_API_KEY")
 ct.set_appearance_mode("light")
 window = ct.CTk()
 
+FILE_PATH = None
+RAW_TRANSCRIPT = None
+YOUTUBE_URL = None
+OPTION = -1
+
 # Window Size
 window.geometry("{0}x{1}+0+0".format(window.winfo_screenwidth(), window.winfo_screenheight()))
 
@@ -37,10 +42,26 @@ def validateInput():
         inputs += 1
 
     if(inputs > 1):
+        print("A")
         validateLabel.configure(text="You can only submit one input at a time!")
-        
-    else:
+        return
+    elif(inputs == 1):
+        print("B")
         validateLabel.configure(text="")
+        
+        if(fileNameLabel.cget("text") != "File Path"):
+            OPTION = 0
+            FILE_PATH = fileNameLabel.cget("text")
+        if(textBox.get("1.0", END) != "\n"):
+            OPTION = 1
+            RAW_TRANSCRIPT = textBox.get("1.0", END)
+        if(youtubeTextBox.get("1.0", END) != "\n"):
+            OPTION = 2
+            YOUTUBE_URL = youtubeTextBox.get("1.0", END)
+        
+        # Delete the widgetsÇ
+        for widgets in window.winfo_children():
+            widgets.destroy()
 
 title = ct.CTkLabel(window, text="Welcome to LectureGPT", font=ct.CTkFont(family="Helvetica", size=40, weight="bold"))
 instructions = ct.CTkLabel(window, text="Choose your input", font=ct.CTkFont(family="Helvetica", size=20, weight="bold"))
