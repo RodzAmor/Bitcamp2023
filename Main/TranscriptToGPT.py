@@ -37,7 +37,7 @@ def practce_problems(summary, outputTextBox):
     )
     with open("Practice_Problems.txt", "w") as f:
         f.write(response.choices[0].text)
-        outputTextBox.configure(text=str(response.choices[0].text))
+        outputTextBox.insert("1.0", str(response.choices[0].text))
   
     return response.choices[0].text
 
@@ -51,7 +51,7 @@ def notes(summary, outputTextBox):
     )
     with open("Notes.txt", "w") as f:
         f.write(response.choices[0].text)
-        outputTextBox.configure(text=str(response.choices[0].text))
+        outputTextBox.insert("1.0", str(response.choices[0].text))
 
     return response.choices[0].text
 
@@ -61,7 +61,7 @@ def summary(summaries, outputTextBox):
         transcript += summary
     with open("Summary.txt", "w") as f:
         f.write(transcript)
-        outputTextBox.configure(text=transcript)
+        outputTextBox.insert("1.0", str(transcript))
 
     return transcript
 
