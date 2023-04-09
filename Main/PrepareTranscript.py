@@ -1,4 +1,5 @@
 import re
+import math
 from MP3ToTranscript import determine_video_type
 from YoutubeDownload import convert_youtube_link
 
@@ -52,19 +53,48 @@ def partition_transcript():
     batchCount = 0
     batches = []
     with open('Transcript.txt', 'r') as f:
-        lines = f.readlines()
         currentBatch = []
-        for line in lines:
+
+        for line in f:
             charCount += len(line)
             currentBatch.append(line)
+
             if (charCount >= 4000):
-                fname = 'batch' + str(batchCount) + '.txt'
-                batches.append(fname)
-                with open(fname, 'w') as batch:
-                    batch.writelines(currentBatch)                    
-                # reset the count and current batch list for the next batch
-                currentBatch.clear()
-                charCount = 0
                 batchCount += 1
+                batches.append('batch' + str(batchCount) + '.txt')
+                charCount = 0
+
+                with open('batch' + str(batchCount) + '.txt', 'w') as batch:
+                    batch.writelines(currentBatch)
+                    currentBatch.clear()
+        
+        if (charCount != 0):
+            batchCount += 1
+            batches.append('batch' + str(batchCount) + '.txt')
+            with open('batch' + str(batchCount) + '.txt', 'w') as batch:
+                    batch.writelines(currentBatch)
+                    currentBatch.clear()
+            charCount = 0
+
+        # for i in range(number_batches): 
+        #     print("check 1")
+        #     lines = f.readlines()
+        #     print("Lines:", lines)
+        #     currentBatch = []
+        #     for line in lines:
+        #         print("check 2")
+        #         charCount += len(line)
+        #         currentBatch.append(line)
+        #         with open(fname, 'w') as batch:
+        #             batch.writelines(currentBatch)
+
+        #         if (charCount >= 4000):
+        #             fname = 'batch' + str(batchCount) + '.txt'
+        #             batches.append(fname)
+        #             # reset the count and current batch list for the next batch
+        #             currentBatch.clear()
+        #             charCount = 0
+        #             batchCount += 1
+
     return batches
     

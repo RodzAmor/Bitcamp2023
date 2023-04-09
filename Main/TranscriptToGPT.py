@@ -11,16 +11,22 @@ openai.api_key = os.getenv("OPEN_API_KEY")
 
 
 def populate_summaries(option, file_path, raw_transcript, youtube_url):
+    summaries = []
     if option in (0, 1, 2):
         BATCHES = get_transcript(option, file_path, raw_transcript, youtube_url)
-        print("BEFORE: " + str(BATCHES))
+        # print("BEFORE: " + str(BATCHES))
         if BATCHES is not None and len(BATCHES) != 0:
-            print("POPULATE SUMMARIES: " + str(len(BATCHES)))
-            summaries = []
+            # print("POPULATE SUMMARIES: " + str(len(BATCHES)))
             for batch in BATCHES:
                 with open(batch, "r") as f:
                     summaries.append(createPartitionedSummary(str(f.read())))
-            return summaries
+            
+            # print("Batches:" + BATCHES)
+            # print("Summaries:" + summaries)
+
+            return (BATCHES, summaries)
+        
+    # return ([], summaries)
         
     
 
