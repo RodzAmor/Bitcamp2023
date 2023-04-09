@@ -48,6 +48,6 @@ def determine_video_type(file_name):
     # 1,048,576 = 1mb
     MB_SIZE = 1000000
     if (os.path.getsize(file_name) < (25 * MB_SIZE)):
-        return small_video()
+        return small_video(file_name)
     else:
-        return large_video()
+        return large_video(file_name)

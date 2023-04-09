@@ -23,9 +23,6 @@ def populate_summaries(option, file_path, raw_transcript, youtube_url):
             return summaries
         
     
-    #    for batch in BATCHES:
-     #       os.remove(batch)
-    
 
 def practce_problems(summary, outputTextBox):
     gpt_prompt = "Give me a few practice problems and an answer key for the problems based on the following summary:\n\n" + summary

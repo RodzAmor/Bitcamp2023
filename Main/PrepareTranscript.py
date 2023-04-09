@@ -21,7 +21,7 @@ def get_transcript(option, file_path=None, raw_transcript=None, youtube_url=None
     elif (option == 2):
         if (youtube_url is not None):
             convert_youtube_link(youtube_url)
-            raw = determine_video_type("Youtube.mp3")
+            raw = determine_video_type("Youtube_Video.mp3")
             direct_transcript(raw)
             return partition_transcript()
     else:
