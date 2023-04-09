@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
 from dotenv import load_dotenv
+from TranscriptToGPT import summary, notes, practce_problems, populate_summaries
 import customtkinter as ct
 import os
 import openai
@@ -31,6 +32,11 @@ def browseFiles():
     fileNameLabel.configure(text=filePath)
 
 def validateInput():
+    global OPTION
+    global FILE_PATH
+    global RAW_TRANSCRIPT
+    global YOUTUBE_URL
+
     # The number of input should not exceed 1
     inputs = 0
 
@@ -66,10 +72,15 @@ def validateInput():
         createNewScreen()
 
 def createNewScreen():
+    print(OPTION)
+    print(FILE_PATH)
+    print(RAW_TRANSCRIPT)
+    print(YOUTUBE_URL)
+    summaries = populate_summaries(OPTION, FILE_PATH, RAW_TRANSCRIPT, YOUTUBE_URL)
     # Modify the commands to the corresponding method
-    summaryButton = ct.CTkButton(window, text="Summary", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=validateInput)
-    notesButton = ct.CTkButton(window, text="Notes", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=validateInput)
-    practiceButton = ct.CTkButton(window, text="Practice Problems", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=validateInput)
+    summaryButton = ct.CTkButton(window, text="Summary", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=lambda: summary(summaries, outputTextBox))
+    notesButton = ct.CTkButton(window, text="Notes", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=lambda: notes(' '.join(summaries), outputTextBox))
+    practiceButton = ct.CTkButton(window, text="Practice Problems", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=lambda: practce_problems(' '.join(summaries), outputTextBox))
 
     ouputLabel = ct.CTkLabel(window, text="Output", font=ct.CTkFont(family="Helvetica", size=30, weight="bold"))
     outputTextBox = ct.CTkTextbox(window, width=500, height=500)
@@ -81,8 +92,7 @@ def createNewScreen():
     outputTextBox.place(relx=0.5, rely=0.2)
     ouputLabel.place(in_=outputTextBox, relx=0.5, rely=0.0, y=-80, anchor="n")
 
-    # Make the logic
-    # outputTextBox.configure(text=[The output you want to show])
+
 
 
 title = ct.CTkLabel(window, text="Welcome to LectureGPT", font=ct.CTkFont(family="Helvetica", size=40, weight="bold"))
