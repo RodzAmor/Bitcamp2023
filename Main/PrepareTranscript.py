@@ -1,5 +1,5 @@
 import re
-from MP3ToTranscript import determine_video_type, large_video, small_video
+from MP3ToTranscript import determine_video_type
 from YoutubeDownload import convert_youtube_link
 
 def get_transcript(option, file_path=None, raw_transcript=None, youtube_url=None):

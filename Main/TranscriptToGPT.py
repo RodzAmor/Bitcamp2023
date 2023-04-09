@@ -3,27 +3,28 @@ import openai
 import math
 from PrepareTranscript import get_transcript
 from MP3ToTranscript import determine_video_type, large_video, small_video
-from GUI import option, uploaded_file_path, direct_pasted_transcript, youtube_url_link 
+from GUI import OPTION, FILE_PATH, RAW_TRANSCRIPT, YOUTUBE_URL
 from dotenv import load_dotenv
 
 load_dotenv()
 openai.api_key = os.getenv("OPEN_API_KEY")
 
+if OPTION in (0, 1, 2):
+    BATCHES = get_transcript(OPTION, FILE_PATH, RAW_TRANSCRIPT, YOUTUBE_URL)
 
-def main():
-    if option in (0, 1, 2):
-        batches = get_transcript(option, uploaded_file_path, direct_pasted_transcript, youtube_url_link)
-        if batches is not None and len(batches) is not 0:
-            summaries = []
-            for batch in batches:
-                with open(batch, "r") as f:
-                    summaries.append(createPartitionedSummary(str(f.read())))
-            summary(summaries)
-            notes(' '.join(summaries))
-            practceProblems(' '.join(summaries))
 
-            for batch in batches:
-                os.remove(batch)
+def populate_summaries():
+    if BATCHES is not None and len(BATCHES) is not 0:
+        summaries = []
+        for batch in BATCHES:
+            with open(batch, "r") as f:
+                summaries.append(createPartitionedSummary(str(f.read())))
+        summary(summaries)
+        notes(' '.join(summaries))
+        practceProblems(' '.join(summaries))
+
+        for batch in BATCHES:
+            os.remove(batch)
     
 
 def practceProblems(summary):
@@ -60,7 +61,7 @@ def summary(summaries):
 
 
 def createPartitionedSummary(partitionedTranscript):
-    maxChar = math.floor(2000 / len(batches)) # 2000 is the safe amount for max character length
+    maxChar = math.floor(2000 / len(BATCHES)) # 2000 is the safe amount for max character length
     gpt_prompt = "Give me a summary that has a hard max of " + str(maxChar) + """ characters, but try to  
                  "make it as detailed as possible for this transcript (don't mention that this is a transcript summary):\n\n""" + partitionedTranscript
     response = openai.Completion.create(
@@ -90,7 +91,6 @@ def stichSummaries(summaries):
     return response.choices[0].text
 
 
-main()
 
 
 
