@@ -46,7 +46,7 @@ def placeStartWidgets():
 def browseFiles():
     filePath = filedialog.askopenfilename(initialdir="./",
                                           title="Select a file",
-                                          filetypes=(("Mp3 Files", "*.mp3")))
+                                          filetypes=(("Mp3 Files", "*.mp3"), ))
     fileNameLabel.configure(text=filePath)
 
 
