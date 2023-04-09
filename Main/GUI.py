@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
 from dotenv import load_dotenv
-from TranscriptToGPT import summary, notes, practce_problems, populate_summaries
+from TranscriptToGPT import summary, notes, practce_problems, populate_summaries, get_transcript
 import customtkinter as ct
 import os
 import openai
@@ -19,6 +19,7 @@ FILE_PATH = None
 RAW_TRANSCRIPT = None
 YOUTUBE_URL = None
 OPTION = -1
+BATCHES = []
 
 # Window Size
 window.geometry("{0}x{1}+0+0".format(window.winfo_screenwidth(), window.winfo_screenheight()))
@@ -48,11 +49,9 @@ def validateInput():
         inputs += 1
 
     if(inputs > 1):
-        print("A")
         validateLabel.configure(text="You can only submit one input at a time!")
         return
     elif(inputs == 1):
-        print("B")
         validateLabel.configure(text="")
         
         if(fileNameLabel.cget("text") != "File Path"):
@@ -72,18 +71,19 @@ def validateInput():
         createNewScreen()
 
 def createNewScreen():
-    print(OPTION)
-    print(FILE_PATH)
-    print(RAW_TRANSCRIPT)
-    print(YOUTUBE_URL)
-    summaries = populate_summaries(OPTION, FILE_PATH, RAW_TRANSCRIPT, YOUTUBE_URL)
+    global BATCHES
+    # print(OPTION)
+    (BATCHES, summaries) = populate_summaries(OPTION, FILE_PATH, RAW_TRANSCRIPT, YOUTUBE_URL)
+    # print(BATCHES)
+
+
     # Modify the commands to the corresponding method
-    summaryButton = ct.CTkButton(window, text="Summary", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=lambda: summary(summaries, outputTextBox))
-    notesButton = ct.CTkButton(window, text="Notes", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=lambda: notes(' '.join(summaries), outputTextBox))
-    practiceButton = ct.CTkButton(window, text="Practice Problems", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=lambda: practce_problems(' '.join(summaries), outputTextBox))
+    summaryButton = ct.CTkButton(window, text="Summary", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=lambda: summary(summaries[1], outputTextBox))
+    notesButton = ct.CTkButton(window, text="Notes", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=lambda: notes(' '.join(summaries[1]), outputTextBox))
+    practiceButton = ct.CTkButton(window, text="Practice Problems", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=lambda: practce_problems(' '.join(summaries[1]), outputTextBox))
 
     ouputLabel = ct.CTkLabel(window, text="Output", font=ct.CTkFont(family="Helvetica", size=30, weight="bold"))
-    outputTextBox = ct.CTkTextbox(window, width=500, height=500)
+    outputTextBox = ct.CTkTextbox(window, width=500, height=500, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"))
 
     summaryButton.place(relx=0.2, rely=0.3)
     notesButton.place(relx=0.2, rely=0.5)
@@ -92,8 +92,23 @@ def createNewScreen():
     outputTextBox.place(relx=0.5, rely=0.2)
     ouputLabel.place(in_=outputTextBox, relx=0.5, rely=0.0, y=-80, anchor="n")
 
+# Cleans the file after closing
+def closeWindow():
+    global BATCHES
 
+    for batch in BATCHES:
+        os.remove(batch)
+    if(os.path.isfile("Transcript.txt")):
+        os.remove("Transcript.txt")
+    if(os.path.isfile("Summary.txt")):
+        os.remove("Summary.txt")
+    if(os.path.isfile("Notes.txt")):
+        os.remove("Notes.txt")
+    if(os.path.isfile("Practice_Problems.txt")):
+        os.remove("Practice_Problems.txt")
 
+    window.destroy()
+    
 
 title = ct.CTkLabel(window, text="Welcome to LectureGPT", font=ct.CTkFont(family="Helvetica", size=40, weight="bold"))
 instructions = ct.CTkLabel(window, text="Choose your input", font=ct.CTkFont(family="Helvetica", size=20, weight="bold"))
@@ -133,4 +148,5 @@ youtubeLabel.place(relx=0.5, rely=0.2, anchor=CENTER)
 youtubeTextBox.place(relx=0.5, rely=0.5, anchor=CENTER)
 youtubeIcon.place(relx=0.5, rely=0.8, anchor=CENTER)
 
+window.protocol("WM_DELETE_WINDOW", closeWindow)
 window.mainloop()
