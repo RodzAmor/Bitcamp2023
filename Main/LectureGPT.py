@@ -1,12 +1,11 @@
-from tkinter import *
-from tkinter import filedialog
-from dotenv import load_dotenv
-from TranscriptToGPT import summary, notes, practce_problems, populate_summaries, get_transcript
 import customtkinter as ct
 import os
 import openai
-from PIL import Image
-# import threading
+import PIL.Image
+from tkinter import *
+from tkinter import filedialog
+from dotenv import load_dotenv
+from TranscriptToGPT import summary, notes, practce_problems, populate_summaries
 
 # Set up the environment
 load_dotenv()
@@ -47,8 +46,7 @@ def placeStartWidgets():
 def browseFiles():
     filePath = filedialog.askopenfilename(initialdir="./",
                                           title="Select a file",
-                                          filetypes=(("Mp3 Files", "*.mp3"),
-                                                     ("MP4 files", "*.mp3")))
+                                          filetypes=(("Mp3 Files", "*.mp3")))
     fileNameLabel.configure(text=filePath)
 
 
@@ -93,7 +91,22 @@ def validateInput():
 def resetWindow():
     for widgets in window.winfo_children():
             widgets.place_forget()
-    
+    global BATCHES
+    for batch in BATCHES:
+        try:
+            os.remove(batch)
+        except:
+            pass
+    if(os.path.isfile("Transcript.txt")):
+        os.remove("Transcript.txt")
+    if(os.path.isfile("Summary.txt")):
+        os.remove("Summary.txt")
+    if(os.path.isfile("Notes.txt")):
+        os.remove("Notes.txt")
+    if(os.path.isfile("Practice_Problems.txt")):
+        os.remove("Practice_Problems.txt")
+    if(os.path.isfile("Youtube_Video.mp3")):
+        os.remove("Youtube_Video.mp3")
     placeStartWidgets()
 
 def createNewScreen():
@@ -122,7 +135,10 @@ def closeWindow():
     global BATCHES
 
     for batch in BATCHES:
-        os.remove(batch)
+        try:
+            os.remove(batch)
+        except:
+            pass
     if(os.path.isfile("Transcript.txt")):
         os.remove("Transcript.txt")
     if(os.path.isfile("Summary.txt")):
@@ -131,6 +147,8 @@ def closeWindow():
         os.remove("Notes.txt")
     if(os.path.isfile("Practice_Problems.txt")):
         os.remove("Practice_Problems.txt")
+    if(os.path.isfile("Youtube_Video.mp3")):
+        os.remove("Youtube_Video.mp3")
 
     window.destroy()
     
@@ -141,7 +159,7 @@ validateLabel = ct.CTkLabel(window, text="", font=ct.CTkFont(family="Helvetica",
 
 fileFrame = ct.CTkFrame(window, width=300, height=200, corner_radius=20)
 browseFileButton = ct.CTkButton(fileFrame, text="Browse Files", command=browseFiles)
-fileLabel = ct.CTkLabel(fileFrame, text="MP3/MP4 File", font=ct.CTkFont(family="Helvetica", size=20, weight="bold"))
+fileLabel = ct.CTkLabel(fileFrame, text="MP3 File", font=ct.CTkFont(family="Helvetica", size=20, weight="bold"))
 fileNameLabel = ct.CTkLabel(fileFrame, text="File Path", font=ct.CTkFont(family="Helvetica", size=15))
 
 textFrame = ct.CTkFrame(window, width=350, height=350, corner_radius=20)
@@ -151,7 +169,7 @@ textBoxLabel = ct.CTkLabel(textFrame, text="Paste Lecture Text", font=ct.CTkFont
 linkFrame = ct.CTkFrame(window, width=300, height=200, corner_radius=20)
 youtubeTextBox = ct.CTkTextbox(linkFrame, width=200, height=10)
 youtubeLabel = ct.CTkLabel(linkFrame, text="Youtube Link", font=ct.CTkFont(family="Helvetica", size=20, weight="bold"))
-youtubeIcon = ct.CTkLabel(linkFrame, text="", image=ct.CTkImage(light_image=Image.open("./youtube.ico"), size=(50, 50)))
+youtubeIcon = ct.CTkLabel(linkFrame, text="", image=ct.CTkImage(light_image=PIL.Image.open("./youtube.ico"), size=(50, 50)))
 
 title.place(relx=0.5, rely=0.12, anchor=CENTER)
 instructions.place(relx=0.5, rely=0.22, anchor=CENTER)

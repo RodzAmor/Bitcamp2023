@@ -3,7 +3,6 @@ import openai
 import math
 import customtkinter as ct
 from PrepareTranscript import get_transcript
-from MP3ToTranscript import determine_video_type, large_video, small_video
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,19 +13,14 @@ def populate_summaries(option, file_path, raw_transcript, youtube_url):
     summaries = []
     if option in (0, 1, 2):
         BATCHES = get_transcript(option, file_path, raw_transcript, youtube_url)
-        # print("BEFORE: " + str(BATCHES))
         if BATCHES is not None and len(BATCHES) != 0:
-            # print("POPULATE SUMMARIES: " + str(len(BATCHES)))
             for batch in BATCHES:
                 with open(batch, "r") as f:
                     summaries.append(createPartitionedSummary(str(f.read())))
             
-            # print("Batches:" + BATCHES)
-            # print("Summaries:" + summaries)
-
+    
             return (BATCHES, summaries)
         
-    # return ([], summaries)
         
     
 
@@ -40,6 +34,7 @@ def practce_problems(summary, outputTextBox):
     )
     with open("Practice_Problems.txt", "w") as f:
         f.write(response.choices[0].text)
+        outputTextBox.delete("1.0", "end")
         outputTextBox.insert("1.0", str(response.choices[0].text))
   
     return response.choices[0].text
@@ -54,6 +49,7 @@ def notes(summary, outputTextBox):
     )
     with open("Notes.txt", "w") as f:
         f.write(response.choices[0].text)
+        outputTextBox.delete("1.0", "end")
         outputTextBox.insert("1.0", str(response.choices[0].text))
 
     return response.choices[0].text
@@ -64,6 +60,7 @@ def summary(summaries, outputTextBox):
         transcript += summary
     with open("Summary.txt", "w") as f:
         f.write(transcript)
+        outputTextBox.delete("1.0", "end")
         outputTextBox.insert("1.0", str(transcript))
 
     return transcript
@@ -85,11 +82,11 @@ def createPartitionedSummary(partitionedTranscript):
 def stichSummaries(summaries):
     """
     This function, although a work of pure art is seriously inconsistent with the summaries
+    Hours Wasted: 3
     """
     transcript = ""
     for summary in summaries:
         transcript += summary
-    print(transcript)
     gpt_prompt = "Give me an 8-sentence long summary that is very detailed based on this transcript:\n\n""" + transcript
     response = openai.Completion.create(
         model = "text-davinci-003",

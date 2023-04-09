@@ -13,8 +13,8 @@ def large_video(file_name):
 
     # 1,048,576 = 1mb
     MB_SIZE = 1000000
-
     audio_file = AudioSegment.from_mp3(file_name)
+
 
     file_size_MB = os.path.getsize(file_name)/MB_SIZE
     partitions = int(file_size_MB / PARTITION_SIZE) + 1
