@@ -62,6 +62,28 @@ def validateInput():
         # Delete the widgetsÇ
         for widgets in window.winfo_children():
             widgets.destroy()
+        
+        createNewScreen()
+
+def createNewScreen():
+    # Modify the commands to the corresponding method
+    summaryButton = ct.CTkButton(window, text="Summary", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=validateInput)
+    notesButton = ct.CTkButton(window, text="Notes", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=validateInput)
+    practiceButton = ct.CTkButton(window, text="Practice Problems", width=250, height=60, font=ct.CTkFont(family="Helvetica", size=20, weight="bold"), command=validateInput)
+
+    ouputLabel = ct.CTkLabel(window, text="Output", font=ct.CTkFont(family="Helvetica", size=30, weight="bold"))
+    outputTextBox = ct.CTkTextbox(window, width=500, height=500)
+
+    summaryButton.place(relx=0.2, rely=0.3)
+    notesButton.place(relx=0.2, rely=0.5)
+    practiceButton.place(relx=0.2, rely=0.7)
+
+    outputTextBox.place(relx=0.5, rely=0.2)
+    ouputLabel.place(in_=outputTextBox, relx=0.5, rely=0.0, y=-80, anchor="n")
+
+    # Make the logic
+    # outputTextBox.configure(text=[The output you want to show])
+
 
 title = ct.CTkLabel(window, text="Welcome to LectureGPT", font=ct.CTkFont(family="Helvetica", size=40, weight="bold"))
 instructions = ct.CTkLabel(window, text="Choose your input", font=ct.CTkFont(family="Helvetica", size=20, weight="bold"))
