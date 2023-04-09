@@ -1,14 +1,11 @@
-# importing the module 
 from pytube import YouTube 
 
-# link of the video to be downloaded 
-link="https://www.youtube.com/watch?v=adh7OhA0UFI"
+def convert_youtube_link(link):
+    try: 
+        # object creation using YouTube
+        # which was imported in the beginning 
+        yt = YouTube(link) 
+        yt.streams.filter(file_extension='mp3').order_by('resolution').first().download(filename="Youtube_Video.mp3")
+    except: 
+        print("Connection Error") #to handle exception 
 
-try: 
-    # object creation using YouTube
-    # which was imported in the beginning 
-    yt = YouTube(link) 
-except: 
-    print("Connection Error") #to handle exception 
-
-yt.streams.filter(file_extension='mp4').order_by('resolution').first().download(filename="temp.mp4")

@@ -1,2 +1,4 @@
-# Ignore the environment file
+# Ignore the environment file and past files
 .env
+PanoptoToMP3.py
+M3U8Converter.py

@@ -1,33 +1,30 @@
 import os
 import openai
 import math
-from PrepareTranscript import batches
+from PrepareTranscript import get_transcript
+from MP3ToTranscript import determine_video_type, large_video, small_video
+from GUI import option, uploaded_file_path, direct_pasted_transcript, youtube_url_link 
 from dotenv import load_dotenv
 
 load_dotenv()
 openai.api_key = os.getenv("OPEN_API_KEY")
 
-#audio_file = open("test.mp3", "rb")
-#transcript = openai.Audio.transcribe("whisper-1", audio_file)
-
-
 
 def main():
-    summaries = []
-    for batch in batches:
-        with open(batch, "r") as f:
-            summaries.append(createPartitionedSummary(str(f.read())))
-    #summary = stichSummaries(summaries)
-    #print("Summary:\n------------\n" + summary)
-    summary(summaries)
-    notes(' '.join(summaries))
-    practceProblems(' '.join(summaries))
+    if option in (0, 1, 2):
+        batches = get_transcript(option, uploaded_file_path, direct_pasted_transcript, youtube_url_link)
+        if batches is not None and len(batches) is not 0:
+            summaries = []
+            for batch in batches:
+                with open(batch, "r") as f:
+                    summaries.append(createPartitionedSummary(str(f.read())))
+            summary(summaries)
+            notes(' '.join(summaries))
+            practceProblems(' '.join(summaries))
 
-    for batch in batches:
-        os.remove(batch)
+            for batch in batches:
+                os.remove(batch)
     
-
-
 
 def practceProblems(summary):
     gpt_prompt = "Give me a few practice problems and an answer key for the problems based on the following summary:\n\n" + summary
@@ -62,7 +59,23 @@ def summary(summaries):
     return transcript
 
 
+def createPartitionedSummary(partitionedTranscript):
+    maxChar = math.floor(2000 / len(batches)) # 2000 is the safe amount for max character length
+    gpt_prompt = "Give me a summary that has a hard max of " + str(maxChar) + """ characters, but try to  
+                 "make it as detailed as possible for this transcript (don't mention that this is a transcript summary):\n\n""" + partitionedTranscript
+    response = openai.Completion.create(
+        model = "text-davinci-003",
+        prompt = gpt_prompt,
+        temperature = 0.5,
+        max_tokens = 1000
+    )
+    return response.choices[0].text
+
+
 def stichSummaries(summaries):
+    """
+    This function, although a work of pure art is seriously inconsistent with the summaries
+    """
     transcript = ""
     for summary in summaries:
         transcript += summary
@@ -76,17 +89,6 @@ def stichSummaries(summaries):
     )
     return response.choices[0].text
 
-def createPartitionedSummary(partitionedTranscript):
-    maxChar = math.floor(2000 / len(batches)) # 2000 is the safe amount for max character length
-    gpt_prompt = "Give me a summary that has a hard max of " + str(maxChar) + """ characters, but try to  
-                 "make it as detailed as possible for this transcript (don't mention that this is a transcript summary):\n\n""" + partitionedTranscript
-    response = openai.Completion.create(
-        model = "text-davinci-003",
-        prompt = gpt_prompt,
-        temperature = 0.5,
-        max_tokens = 1000
-    )
-    return response.choices[0].text
 
 main()
 
